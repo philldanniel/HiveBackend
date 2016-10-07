@@ -56,6 +56,16 @@ public class RoleDAOImpl implements RoleDAO {
 	}
 	
 	@Transactional
+	public Role getRoleByName(String roleName) {
+		Session session=getSessionFactory().getCurrentSession();
+		Query query =session.createQuery("from Role where role_name=?");
+		query.setString(0, roleName);
+		
+		Role role = (Role) query.uniqueResult();
+		return role;
+	}
+	
+	@Transactional
 	public void saveOrUpdate(Role role) {
 		getSessionFactory().getCurrentSession().saveOrUpdate(role);
 

@@ -23,12 +23,18 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table
 @Component
 @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property = "blog_id")
+@JsonSerialize
 public class Blog implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4326512339446989452L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="blog_seq")
 	@SequenceGenerator(
@@ -46,10 +52,14 @@ public class Blog implements Serializable {
 	private DateTime blog_date;
 	private int status;
 	
+	
+	
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name="user_id",referencedColumnName= "user_id"/*, updatable = false, insertable = false*/)
 	
 	private UserDetails blogger;
+	
 	
 	@OneToMany(mappedBy="blog_id", fetch = FetchType.EAGER)
 	

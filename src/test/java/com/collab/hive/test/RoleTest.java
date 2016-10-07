@@ -12,7 +12,7 @@ public class RoleTest {
 		
 		RoleDAO roleDAO = factory.getBean(RoleDAO.class);
 		Role role = new Role();
-		role.setRole_name("ADMIN");
+		role.setRole_name("ALUMNI");
 		roleDAO.saveOrUpdate(role);
 		
 		/*roleDAO.delete(3);*/

@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.collab.hive.dao.RoleDAO;
 import com.collab.hive.dao.UserDetailsDAO;
+import com.collab.hive.dao.UserRoleDAO;
+import com.collab.hive.model.Role;
 import com.collab.hive.model.UserDetails;
+import com.collab.hive.model.UserRole;
 @RestController
 public class UserDetailsRestController {
 	@Autowired
@@ -25,6 +29,15 @@ public class UserDetailsRestController {
 	@Autowired
 	private UserDetailsDAO userDAO;
 	
+	@Autowired
+	private RoleDAO roleDAO;
+	
+	@Autowired
+	private UserRole userRole;
+	
+	@Autowired
+	private UserRoleDAO userRoleDAO;
+	
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public ResponseEntity<List<UserDetails>> getUserDetailss(){
 		List <UserDetails> userList = userDAO.list();
@@ -32,6 +45,24 @@ public class UserDetailsRestController {
 			return new ResponseEntity<List<UserDetails>>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<List<UserDetails>>(userList, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/users/role", method = RequestMethod.GET)
+	public ResponseEntity<List<Role>> getRole(){
+		List <Role> roleList = roleDAO.list();
+		if(roleList.isEmpty()){
+			return new ResponseEntity<List<Role>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<Role>>(roleList, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/users/userRole", method = RequestMethod.GET)
+	public ResponseEntity<List<UserRole>> getUserRole(){
+		List <UserRole> userRoleList = userRoleDAO.list();
+		if(userRoleList.isEmpty()){
+			return new ResponseEntity<List<UserRole>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<UserRole>>(userRoleList, HttpStatus.OK);
 	}
 	
 	@GetMapping("/users/{id}")
@@ -43,13 +74,27 @@ public class UserDetailsRestController {
 		return new ResponseEntity<UserDetails>(user, HttpStatus.OK);
 	}
 	
-	@PostMapping("/user")
-	public ResponseEntity<UserDetails> createUserDetails(@RequestBody UserDetails newuser){
+	@PostMapping("/users/role/{role}")
+	public ResponseEntity<UserDetails> createUserDetails(@RequestBody UserDetails newuser, @PathVariable("role") String roleName){
 		userDAO.saveOrUpdate(newuser);
+		Role role = roleDAO.getRoleByName(roleName);
+		userRole.setRole(role);
+		userRole.setUserDetails(newuser);
+		userRoleDAO.saveOrUpdate(userRole);
 		return new ResponseEntity<UserDetails>(newuser , HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/user/{id}")
+	@PostMapping("/users/authenticateCurrentUser/{id}")
+	public ResponseEntity<String> authenticateCurrentUser(@PathVariable("id") String userId, 
+			@RequestBody String password){
+		userDAO.isValidUser(userId, password);
+		System.out.println("Loggedinuser old" + userDAO.isValidUser(userId, password));
+		String loggedIn = Boolean.toString(userDAO.isValidUser(userId, password));
+		System.out.println("Loggedinuser" + loggedIn);
+		return new ResponseEntity<String>(loggedIn, HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/users/{id}")
 	public ResponseEntity<UserDetails> deleteUserDetails(@PathVariable("id") String id){
 		if(userDAO.get(id) == null){
 			return new ResponseEntity<UserDetails>(HttpStatus.NOT_FOUND);
@@ -58,7 +103,7 @@ public class UserDetailsRestController {
 		return new ResponseEntity<UserDetails>(HttpStatus.OK);
 	}
 	
-	@PutMapping("/user/{id}")
+	@PutMapping("/users/{id}")
 	public ResponseEntity<UserDetails> updateUserDetails(@PathVariable("id") String id, @RequestBody UserDetails user){
 		if(userDAO.get(id) == null){
 			return new ResponseEntity<UserDetails>(HttpStatus.NOT_FOUND);

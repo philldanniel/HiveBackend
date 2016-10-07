@@ -33,30 +33,31 @@ public class UserDetails implements Serializable {
 	private String password;
 	private int status;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="userDetails", fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private Set<UserRole> userRoles;
-	
+	@JsonIgnore
 	@OneToMany(mappedBy="blogger", fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private List<Blog> blogs;
-	
+	@JsonIgnore
 	@OneToMany(mappedBy="user_id", fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private List<BlogComment> comments;
-	
+	@JsonIgnore
 	@OneToMany(mappedBy="forum_creator", fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private List<Forum> forums;
-	
+	@JsonIgnore
 	@OneToMany(mappedBy="post_creator", fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private List<ForumPost> forumPosts;
-	
+	@JsonIgnore
 	@OneToMany(mappedBy="member", fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private List<ForumPostComment> forumPostComments;
-	
+	@JsonIgnore
 	@OneToMany(mappedBy="forum_member", fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
 	private List<ForumMember> forumMembers;

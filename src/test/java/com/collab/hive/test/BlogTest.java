@@ -16,8 +16,8 @@ public class BlogTest {
 		BlogDAO blogDAO = factory.getBean(BlogDAO.class);
 		UserDetailsDAO userDetailsDAO = factory.getBean(UserDetailsDAO.class);
 		Blog blog = new Blog();
-		blog.setBlog_name("Second blog");
-		blog.setBlog("This is my second blog.");
+		blog.setBlog_name("Fourth blog");
+		blog.setBlog("This is my fourth blog.");
 		blog.setStatus(0);
 		DateTime dt = new DateTime();
 		blog.setBlog_date(dt);

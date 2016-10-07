@@ -25,9 +25,10 @@ public class BlogRestController {
 	@Autowired
 	private BlogDAO blogDAO;
 	
-	@RequestMapping(value = "/blogs", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/blogs", method = RequestMethod.GET)*/
+	@GetMapping(value= "/blogs", produces="application/json; charset=UTF-8" )
 	public ResponseEntity<List<Blog>> getBlogs(){
-		List <Blog> blogList = blogDAO.list();
+		List<Blog> blogList = blogDAO.list();
 		if(blogList.isEmpty()){
 			return new ResponseEntity<List<Blog>>(HttpStatus.NO_CONTENT);
 		}
@@ -41,6 +42,7 @@ public class BlogRestController {
 			return new ResponseEntity<Blog>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Blog>(blog, HttpStatus.OK);
+		
 	}
 	
 	@PostMapping("/blogs")

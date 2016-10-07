@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.collab.hive.model.Blog;
+import com.collab.hive.model.UserDetails;
 
 @Repository("BlogDAO")
 public class BlogDAOImpl implements BlogDAO {
@@ -40,8 +41,12 @@ public class BlogDAOImpl implements BlogDAO {
 	
 	@Transactional
 	public List<Blog> list(){
-		@SuppressWarnings("unchecked")
+		/*@SuppressWarnings("unchecked")
 		List<Blog> listBlog = sessionFactory.getCurrentSession().createCriteria(Blog.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+		return listBlog;*/
+		
+		Session session = sessionFactory.getCurrentSession();
+		List<Blog> listBlog = session.createQuery("from Blog").list();
 		return listBlog;
 	}
 	
