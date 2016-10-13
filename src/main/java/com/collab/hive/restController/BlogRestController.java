@@ -2,6 +2,7 @@ package com.collab.hive.restController;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.collab.hive.dao.BlogDAO;
+import com.collab.hive.dao.UserDetailsDAO;
 import com.collab.hive.model.Blog;
+import com.collab.hive.model.UserDetails;
 @RestController
 public class BlogRestController {
 	@Autowired
@@ -24,6 +27,12 @@ public class BlogRestController {
 	
 	@Autowired
 	private BlogDAO blogDAO;
+	
+	@Autowired
+	private UserDetails user;
+	
+	@Autowired
+	private UserDetailsDAO userDAO;
 	
 	/*@RequestMapping(value = "/blogs", method = RequestMethod.GET)*/
 	@GetMapping(value= "/blogs", produces="application/json; charset=UTF-8" )
@@ -45,8 +54,13 @@ public class BlogRestController {
 		
 	}
 	
-	@PostMapping("/blogs")
-	public ResponseEntity<Blog> createBlog(@RequestBody Blog newblog){
+	@PostMapping("/blogs/{id}")
+	public ResponseEntity<Blog> createBlog(@RequestBody Blog newblog, @PathVariable("id") String userId){
+		user = userDAO.get(userId);
+		newblog.setBlogger(user);
+		DateTime dt = new DateTime();
+		newblog.setBlog_date(dt);
+		
 		blogDAO.saveOrUpdate(newblog);
 		return new ResponseEntity<Blog>(newblog , HttpStatus.OK);
 	}

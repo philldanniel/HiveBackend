@@ -39,10 +39,14 @@ public class BlogCommentDAOImpl implements BlogCommentDAO {
 	
 	
 	
+	@SuppressWarnings("deprecation")
 	@Transactional
-	public List<BlogComment> list(){
+	public List<BlogComment> list(int id){
 		@SuppressWarnings("unchecked")
-		List<BlogComment> listBlogComment = sessionFactory.getCurrentSession().createCriteria(BlogComment.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+		String hql = "from BlogComment where blog_id='"+id+"'";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		List<BlogComment> listBlogComment = query.list();
+		/*List<BlogComment> listBlogComment = sessionFactory.getCurrentSession().createCriteria(BlogComment.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();*/
 		return listBlogComment;
 	}
 	

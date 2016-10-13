@@ -18,8 +18,11 @@ import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -36,15 +39,18 @@ public class BlogComment implements Serializable {
 			allocationSize=1)
 	private int comment_id;
 	@ManyToOne
+	@JsonIgnoreProperties({"first_name","last_name","email_id","mobile_no","password","status"})
 	@JoinColumn(name="user_id",referencedColumnName= "user_id")
 	private UserDetails user_id;
 	@ManyToOne
+	@JsonIgnoreProperties({"blog_name","blog","blog_date","status","blogger"})
 	@JoinColumn(name="blog_id",referencedColumnName= "blog_id")
 	private Blog blog_id;
 	@Column(length=1000, nullable = false)
 	private String blog_comment;
 	@Column(nullable = false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	@JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss")
 	private DateTime cmnt_date_time;
 	
 	

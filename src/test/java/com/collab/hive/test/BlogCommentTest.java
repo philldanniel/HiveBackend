@@ -17,19 +17,20 @@ public class BlogCommentTest {
 		BlogCommentDAO blogCommentDAO = factory.getBean(BlogCommentDAO.class);
 		
 		BlogDAO blogDAO = factory.getBean(BlogDAO.class);
+		UserDetailsDAO userDetailsDAO = factory.getBean(UserDetailsDAO.class);
 		
-		Blog blog = blogDAO.get(2);
+		Blog blog = blogDAO.get(3);
 		BlogComment blogComment = new BlogComment();
 		DateTime dt = new DateTime();
 		
 		
-		blogComment.setBlog_comment("Hey there, welcome to HIVE! Great to have you on board.");
+		blogComment.setBlog_comment("Welcome to HIVE! Great to have you on board.");
 		blogComment.setBlog_id(blog);
-		blogComment.setUser_id(blog.getBlogger());
+		blogComment.setUser_id(userDetailsDAO.get("phill"));
 		blogComment.setCmnt_date_time(dt);
 		blogCommentDAO.saveOrUpdate(blogComment);
-		
-		/*blogCommentDAO.delete(1);*/
+	
+		/*blogCommentDAO.delete(22);*/
 		
 		/*BlogComment blogComment = blogCommentDAO.get(5);
 		System.out.println("BlogComment:-"+ blogComment.getBlog_name());

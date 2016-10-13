@@ -6,7 +6,7 @@ import com.collab.hive.model.BlogComment;
 
 public interface BlogCommentDAO {
 	
-	public List<BlogComment> list();
+	public List<BlogComment> list(int id);
 	public BlogComment get(int id);
 	public void saveOrUpdate(BlogComment blogComment);
 	public void delete(int id);

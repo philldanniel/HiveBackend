@@ -88,9 +88,7 @@ public class UserDetailsRestController {
 	public ResponseEntity<String> authenticateCurrentUser(@PathVariable("id") String userId, 
 			@RequestBody String password){
 		userDAO.isValidUser(userId, password);
-		System.out.println("Loggedinuser old" + userDAO.isValidUser(userId, password));
 		String loggedIn = Boolean.toString(userDAO.isValidUser(userId, password));
-		System.out.println("Loggedinuser" + loggedIn);
 		return new ResponseEntity<String>(loggedIn, HttpStatus.OK);
 	}
 	
