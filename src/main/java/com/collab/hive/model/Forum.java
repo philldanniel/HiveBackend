@@ -20,39 +20,40 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table
 @Component
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property = "forum_id")
 public class Forum {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="frm_seq")
-	@SequenceGenerator(
-			name="frm_seq",
-			sequenceName="frm_sequence",
-			initialValue=1,
-			allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "frm_seq")
+	@SequenceGenerator(name = "frm_seq", sequenceName = "frm_sequence", initialValue = 1, allocationSize = 1)
 	private int forum_id;
-	@Column(length=100, nullable = false)
+	@Column(length = 100/*, nullable = false*/)
 	private String forum_name;
-	@Column(nullable = false)
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	private DateTime forum_date;
 	@ManyToOne
-	@JoinColumn(name="user_id",referencedColumnName= "user_id")
+	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
 	private UserDetails forum_creator;
-	
-	@OneToMany(mappedBy="forum_id", fetch = FetchType.EAGER)
+
+	@OneToMany(mappedBy = "forum_id", fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
+	@JsonIgnore
 	private List<ForumPost> forumPosts;
-	
-	@OneToMany(mappedBy="forum", fetch = FetchType.EAGER)
+
+	@OneToMany(mappedBy = "forum", fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
+	@JsonIgnore
 	private List<ForumMember> forumMembers;
-	
-	
-	
-	
-	
+	private int status;
+
 	public int getForum_id() {
 		return forum_id;
 	}
@@ -100,10 +101,14 @@ public class Forum {
 	public void setForumMembers(List<ForumMember> forumMembers) {
 		this.forumMembers = forumMembers;
 	}
-	
-	
-	
-	
-	
 
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	
+	
 }

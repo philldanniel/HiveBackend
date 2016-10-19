@@ -46,6 +46,13 @@ public class ForumPostDAOImpl implements ForumPostDAO {
 	}
 	
 	@Transactional
+	public List<ForumPost> approvedPostlist(){
+		@SuppressWarnings("unchecked")
+		List<ForumPost> listForumPost = sessionFactory.getCurrentSession().createQuery("from ForumPost where status='1'").list();
+		return listForumPost;
+	}
+	
+	@Transactional
 	public ForumPost get(int id) {
 		Session session=getSessionFactory().getCurrentSession();
 		Query query =session.createQuery("from ForumPost where post_id=?");

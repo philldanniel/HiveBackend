@@ -46,6 +46,20 @@ public class ForumDAOImpl implements ForumDAO {
 	}
 	
 	@Transactional
+	public List<Forum> approvedList(){
+		@SuppressWarnings("unchecked")
+		List<Forum> listForum = sessionFactory.getCurrentSession().createQuery("from Forum where status='1'").list();
+		return listForum;
+	}
+	
+	@Transactional
+	public List<Forum> pendingList(){
+		@SuppressWarnings("unchecked")
+		List<Forum> listForum = sessionFactory.getCurrentSession().createQuery("from Forum where status='0'").list();
+		return listForum;
+	}
+	
+	@Transactional
 	public Forum get(int id) {
 		Session session=getSessionFactory().getCurrentSession();
 		Query query =session.createQuery("from Forum where forum_id=?");

@@ -20,6 +20,8 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table
 @Component
@@ -49,6 +51,7 @@ public class ForumPost {
 	
 	@OneToMany(mappedBy="post_id", fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
+	@JsonIgnore
 	private List<ForumPost> forumsPost;
 
 	

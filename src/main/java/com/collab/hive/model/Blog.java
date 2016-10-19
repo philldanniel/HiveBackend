@@ -60,7 +60,7 @@ public class Blog implements Serializable {
 	
 	
 	@OneToMany(mappedBy="blog_id", fetch = FetchType.EAGER)
-	
+	@JsonIgnore
 	private List<BlogComment> blogComments;
 
 	public int getBlog_id() {

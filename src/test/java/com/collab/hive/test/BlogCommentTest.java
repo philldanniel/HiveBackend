@@ -23,10 +23,10 @@ public class BlogCommentTest {
 		BlogComment blogComment = new BlogComment();
 		DateTime dt = new DateTime();
 		
-		
+		blogComment.setComment_id(22);
 		blogComment.setBlog_comment("Welcome to HIVE! Great to have you on board.");
 		blogComment.setBlog_id(blog);
-		blogComment.setUser_id(userDetailsDAO.get("phill"));
+		blogComment.setUser_id(userDetailsDAO.get("dhaneesh"));
 		blogComment.setCmnt_date_time(dt);
 		blogCommentDAO.saveOrUpdate(blogComment);
 	
