@@ -136,16 +136,34 @@ public class ForumRestController {
 	
 	/*-----------------------------------------Start of Forum-Post---------------------------------------*/
 	
-	@GetMapping(value= "/forumPost", produces="application/json; charset=UTF-8" )
-	public ResponseEntity<List<ForumPost>> getForumPosts(){
-		List<ForumPost> forumPostList = forumPostDAO.list();
+	@GetMapping(value= "/forumPost/{id}", produces="application/json; charset=UTF-8" )
+	public ResponseEntity<List<ForumPost>> getForumPosts(@PathVariable("id") int id){
+		List<ForumPost> forumPostList = forumPostDAO.list(id);
 		if(forumPostList.isEmpty()){
 			return new ResponseEntity<List<ForumPost>>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<List<ForumPost>>(forumPostList, HttpStatus.OK);
 	}
 	
-	@GetMapping("/forumPost/{id}")
+	@GetMapping(value= "/forumPost/approved/{id}", produces="application/json; charset=UTF-8" )
+	public ResponseEntity<List<ForumPost>> getApprovedPosts(@PathVariable("id") int id){
+		List<ForumPost> forumPostList = forumPostDAO.approvedPostlist(id);
+		if(forumPostList.isEmpty()){
+			return new ResponseEntity<List<ForumPost>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<ForumPost>>(forumPostList, HttpStatus.OK);
+	}
+	
+	@GetMapping(value= "/forumPost/pending/{id}", produces="application/json; charset=UTF-8" )
+	public ResponseEntity<List<ForumPost>> getPendingPosts(@PathVariable("id") int id){
+		List<ForumPost> forumPostList = forumPostDAO.pendingPostlist(id);
+		if(forumPostList.isEmpty()){
+			return new ResponseEntity<List<ForumPost>>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<ForumPost>>(forumPostList, HttpStatus.OK);
+	}
+	
+	@GetMapping("/forumPost/currentPost/{id}")
 	public ResponseEntity<ForumPost> getForumPost(@PathVariable("id") int id){
 		forumPost = forumPostDAO.get(id);
 		if(forumPost == null){
@@ -155,15 +173,34 @@ public class ForumRestController {
 		
 	}
 	
-	@PostMapping("/forumPost/{id}")
-	public ResponseEntity<ForumPost> createForumPost(@RequestBody ForumPost newPost, @PathVariable("id") String userId){
+	@PostMapping("/forumPost/{fid}/{pid}")
+	public ResponseEntity<ForumPost> createForumPost(@RequestBody ForumPost newPost, 
+			@PathVariable("fid") int forumId, @PathVariable("pid") String userId){
 		user = userDAO.get(userId);
 		newPost.setPost_creator(user);
+		forum = forumDAO.get(forumId);
+		newPost.setForum_id(forum);
 		DateTime dt = new DateTime();
 		newPost.setPost_date(dt);
 		
 		forumPostDAO.saveOrUpdate(newPost);
 		return new ResponseEntity<ForumPost>(newPost , HttpStatus.OK);
+	}
+	
+	@PostMapping("/forumPost/approve/{id}")
+	public ResponseEntity<ForumPost> approvePost(@PathVariable("id") int fId){
+		ForumPost post = forumPostDAO.get(fId);
+		post.setStatus(1);
+		forumPostDAO.saveOrUpdate(post);
+		return new ResponseEntity<ForumPost>(post , HttpStatus.OK);
+	}
+	
+	@PostMapping("/forumPost/reject/{id}")
+	public ResponseEntity<ForumPost> rejectPost(@PathVariable("id") int fId){
+		ForumPost post = forumPostDAO.get(fId);
+		post.setStatus(2);
+		forumPostDAO.saveOrUpdate(post);
+		return new ResponseEntity<ForumPost>(post , HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/forumPost/{id}")
@@ -189,30 +226,22 @@ public class ForumRestController {
 	
 	/*-------------------------------------Start of Forum-Post-Comment---------------------------------------*/
 	
-	@GetMapping(value= "/forumPostComment", produces="application/json; charset=UTF-8" )
-	public ResponseEntity<List<ForumPostComment>> getForumPostComments(){
-		List<ForumPostComment> forumPostCommentList = forumPostCommentDAO.list();
+	@GetMapping(value= "/forumPostComment/{id}", produces="application/json; charset=UTF-8" )
+	public ResponseEntity<List<ForumPostComment>> getForumPostComments(@PathVariable("id") int id){
+		List<ForumPostComment> forumPostCommentList = forumPostCommentDAO.list(id);
 		if(forumPostCommentList.isEmpty()){
 			return new ResponseEntity<List<ForumPostComment>>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<List<ForumPostComment>>(forumPostCommentList, HttpStatus.OK);
 	}
 	
-	@GetMapping("/forumPostComment/{id}")
-	public ResponseEntity<ForumPostComment> getForumPostComment(@PathVariable("id") int id){
-		forumPostComment = forumPostCommentDAO.get(id);
-		if(forumPostComment == null){
-			return new ResponseEntity<ForumPostComment>(HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<ForumPostComment>(forumPostComment, HttpStatus.OK);
-		
-	}
-	
-	@PostMapping("/forumPostComment/{id}")
+	@PostMapping("/forumPostComment/{pid}/{uid}")
 	public ResponseEntity<ForumPostComment> createForumPostComment(@RequestBody ForumPostComment newComment,
-			@PathVariable("id") String userId){
+			@PathVariable("pid") int pid, @PathVariable("uid") String userId){
 		user = userDAO.get(userId);
+		forumPost = forumPostDAO.get(pid);
 		newComment.setMember(user);
+		newComment.setPost_id(forumPost);
 		DateTime dt = new DateTime();
 		newComment.setPostcmnt_date(dt);
 		

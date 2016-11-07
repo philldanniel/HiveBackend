@@ -39,16 +39,35 @@ public class ForumPostDAOImpl implements ForumPostDAO {
 	
 	
 	@Transactional
-	public List<ForumPost> list(){
+	public List<ForumPost> list(int id){
 		@SuppressWarnings("unchecked")
-		List<ForumPost> listForumPost = sessionFactory.getCurrentSession().createCriteria(ForumPost.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+		Session session=getSessionFactory().getCurrentSession();
+		Query query =session.createQuery("from ForumPost where forum_id=?");
+		query.setInteger(0, id);
+		
+		List<ForumPost> listForumPost = query.list();
 		return listForumPost;
 	}
 	
 	@Transactional
-	public List<ForumPost> approvedPostlist(){
+	public List<ForumPost> approvedPostlist(int id){
 		@SuppressWarnings("unchecked")
-		List<ForumPost> listForumPost = sessionFactory.getCurrentSession().createQuery("from ForumPost where status='1'").list();
+		Session session=getSessionFactory().getCurrentSession();
+		Query query =session.createQuery("from ForumPost where forum_id=? and status='1'");
+		query.setInteger(0, id);
+		
+		List<ForumPost> listForumPost = query.list();
+		return listForumPost;
+	}
+	
+	@Transactional
+	public List<ForumPost> pendingPostlist(int id){
+		@SuppressWarnings("unchecked")
+		Session session=getSessionFactory().getCurrentSession();
+		Query query =session.createQuery("from ForumPost where forum_id=? and status='0'");
+		query.setInteger(0, id);
+		
+		List<ForumPost> listForumPost = query.list();
 		return listForumPost;
 	}
 	

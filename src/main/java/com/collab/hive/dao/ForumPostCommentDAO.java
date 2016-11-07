@@ -6,7 +6,7 @@ import com.collab.hive.model.ForumPostComment;
 
 public interface ForumPostCommentDAO {
 	
-	public List<ForumPostComment> list();
+	public List<ForumPostComment> list(int id);
 	public ForumPostComment get(int id);
 	public void saveOrUpdate(ForumPostComment forumPostComment);
 	public void delete(int id);

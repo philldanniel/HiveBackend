@@ -39,10 +39,51 @@ public class FriendRelationshipDAOImpl implements FriendRelationshipDAO {
 	
 	
 	@Transactional
-	public List<FriendRelationship> list(){
+	public List<FriendRelationship> list(String id){
 		@SuppressWarnings("unchecked")
-		List<FriendRelationship> listFriendRelationship = sessionFactory.getCurrentSession().createCriteria(FriendRelationship.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
-		return listFriendRelationship;
+		/*List<FriendRelationship> listFriendRelationship = sessionFactory.getCurrentSession().createCriteria(FriendRelationship.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();*/
+		
+		Query query = sessionFactory.getCurrentSession().createQuery("from FriendRelationship where (user_id_one=? or user_id_two=?)");
+		query.setString(0, id);
+		query.setString(1, id);
+		List<FriendRelationship> listFriend = query.list(); 
+		return listFriend;
+	}
+	
+	@Transactional
+	public List<FriendRelationship> listPending(String id){
+		@SuppressWarnings("unchecked")
+		/*List<FriendRelationship> listFriendRelationship = sessionFactory.getCurrentSession().createCriteria(FriendRelationship.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();*/
+		
+		Query query = sessionFactory.getCurrentSession().createQuery("from FriendRelationship where (user_id_one=? or user_id_two=?) and status='0'");
+		query.setString(0, id);
+		query.setString(1, id);
+		List<FriendRelationship> listFriend = query.list(); 
+		return listFriend;
+	}
+	
+	@Transactional
+	public List<FriendRelationship> listAccepted(String id){
+		@SuppressWarnings("unchecked")
+		/*List<FriendRelationship> listFriendRelationship = sessionFactory.getCurrentSession().createCriteria(FriendRelationship.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();*/
+		
+		Query query = sessionFactory.getCurrentSession().createQuery("from FriendRelationship where (user_id_one=? or user_id_two=?) and status='1'");
+		query.setString(0, id);
+		query.setString(1, id);
+		List<FriendRelationship> listFriend = query.list(); 
+		return listFriend;
+	}
+	
+	@Transactional
+	public List<FriendRelationship> listRejected(String id){
+		@SuppressWarnings("unchecked")
+		/*List<FriendRelationship> listFriendRelationship = sessionFactory.getCurrentSession().createCriteria(FriendRelationship.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();*/
+		
+		Query query = sessionFactory.getCurrentSession().createQuery("from FriendRelationship where (user_id_one=? or user_id_two=?) and status='2'");
+		query.setString(0, id);
+		query.setString(1, id);
+		List<FriendRelationship> listFriend = query.list(); 
+		return listFriend;
 	}
 	
 	@Transactional

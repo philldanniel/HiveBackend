@@ -30,6 +30,8 @@ public class ForumPostCommentDAOImpl implements ForumPostCommentDAO {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	
 /*
 	@Autowired
 	public ForumPostCommentDAOImpl(SessionFactory sessionFactory) {
@@ -39,9 +41,11 @@ public class ForumPostCommentDAOImpl implements ForumPostCommentDAO {
 	
 	
 	@Transactional
-	public List<ForumPostComment> list(){
+	public List<ForumPostComment> list(int id){
 		@SuppressWarnings("unchecked")
-		List<ForumPostComment> listForumPostComment = sessionFactory.getCurrentSession().createCriteria(ForumPostComment.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+		String hql = "from ForumPostComment where post_id='"+id+"'";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		List<ForumPostComment> listForumPostComment = query.list();
 		return listForumPostComment;
 	}
 	

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.collab.hive.dao.RoleDAO;
 import com.collab.hive.dao.UserDetailsDAO;
 import com.collab.hive.dao.UserRoleDAO;
+import com.collab.hive.mail.OnRegMail;
 import com.collab.hive.model.Role;
 import com.collab.hive.model.UserDetails;
 import com.collab.hive.model.UserRole;
@@ -37,6 +38,9 @@ public class UserDetailsRestController {
 	
 	@Autowired
 	private UserRoleDAO userRoleDAO;
+	
+	@Autowired
+	private OnRegMail regMail;
 	
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public ResponseEntity<List<UserDetails>> getUserDetailss(){
@@ -81,6 +85,7 @@ public class UserDetailsRestController {
 		userRole.setRole(role);
 		userRole.setUserDetails(newuser);
 		userRoleDAO.saveOrUpdate(userRole);
+		regMail.sendMail(newuser.getEmail_id());
 		return new ResponseEntity<UserDetails>(newuser , HttpStatus.OK);
 	}
 	
